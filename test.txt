@@ -1,1 +1,2 @@
-happy-julius
+コマンドからのコミット
+git add ファイル; git commit -m "コメント"; git pull; git push
