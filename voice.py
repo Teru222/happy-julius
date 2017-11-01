@@ -2,9 +2,9 @@
 import socket
 import subprocess
 import xml.etree.ElementTree as ET
-import RPi.GPIO as GPIO
+import os
 
-HOST = "192.168.11.7"
+HOST = "192.168.11.26"
 PORT = 10500
 
 PORT_RED = 17
