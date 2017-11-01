@@ -3,6 +3,7 @@ import socket
 import subprocess
 import xml.etree.ElementTree as ET
 import RPi.GPIO as GPIO
+import os
 
 HOST = "192.168.11.7"
 PORT = 10500
@@ -35,7 +36,7 @@ def main():
                         for whypo in root.findall("./SHYPO/WHYPO"):
                               if whypo.get("WORD") in voices.keys():
                                     # 判別した言葉に応じて色を変える
-                                    putVoices(whypo.get("WORD"))
+                                    os.system("aplay '/home/pi/Music/ohayo.wav'")
                               else:
                                     print "Unknown"
                                     data = ""

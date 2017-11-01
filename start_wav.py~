@@ -1,3 +1,0 @@
-import os
-
-os.system("aplay --quiet'/home/pi/Music/ohayo.wav'")
