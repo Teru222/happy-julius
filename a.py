@@ -3,55 +3,71 @@ import xml.etree.ElementTree as ET
 import os
 import subprocess
 import time
-host = 'localhost'
+
+host = '192.168.11.26'
 port = 10500
+
 def main():
-    p = subprocess.Popen(["bash a.sh"], stdout=subprocess.PIPE, shell=True)
-    
-    
+
+    p = subprocess.Popen(["./b.sh"], stdout=subprocess.PIPE, shell=True)
+    pid = str(p.stdout.read().decode('utf-8')) # juliusのプロセスIDを取得
+    time.sleep(3)
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((host, port))
-
     
     try:
         data = ''
+        killword =''
         while 1:
-           # print(data)
+            #print(data)
             if '</RECOGOUT>\n.' in data:
+                
                 root = ET.fromstring('<?xml version="1.0"?>\n' + data[data.find('<RECOGOUT>'):].replace('\n.', ''))
                 for whypo in root.findall('./SHYPO/WHYPO'):
-                    
+
                     command = whypo.get('WORD')
-                    
-                    print(command)
                     if command == u'こんにちは':
+                        if killword != ('こんにちは'):
+                            os.system("aplay '/home/pi/Music/ohayo.wav'")
+                            killword = ('こんにちは')
+
+                    elif command == u'おはよう':
+                        if killword != ('こんにちは'):
+                            os.system("aplay '/home/pi/Music/ohayo.wav'")
+                            killword = ('おはよう')
+                        
+                    elif command == u'こんばんは':
+                        if killword != ('こんにちは'):
+                            os.system("aplay '/home/pi/Music/ohayo.wav'")
+                            killword = ('こんばんは')
+
+                    elif command == u'ばいばい':
+                        if killword != ('こんにちは'):
+                            os.system("aplay '/home/pi/Music/ohayo.wav'")
+                            killword = ('ばいばい')
+                        
+                    elif command == u'せもぽぬめ':
                         os.system("aplay '/home/pi/Music/ohayo.wav'")
-                        time.sleep(3)
-                        # ここに処理
-                    #elif command == u'パキン' and score >= 0.996:
-                        # ここにパキン処理
-                    #elif command == u'おやすみ' and score >= 0.93:
-                        # ここにおやすみ処理
-                    #elif command == u'いってきます' and score >= 0.93:
-                        # ここにいってきます処理
-                    #elif command == u'部屋つけて' and score >= 0.93:
-                        # ここに部屋つけて処理
-                    #elif command == u'おはよう' and score >= 0.9:
-                        # ここにおはよう処理
-                    #elif command == u'部屋消して' and score >= 0.9:
-                        # ここに部屋消して処理
-                    #elif command == u'廊下つけて' and score >= 0.93:
-                        # ここに廊下つけて処理
-                    #elif command == u'廊下消して' and score >= 0.9:
-                        # ここに廊下消して処理
-                        #data = ''
-                print (command)
+                        killword = ('シークレット')
+
+                    elif command == u'おやすみ':
+                        os.system("aplay '/home/pi/Music/ohayo.wav'")
+                        killword = ('おやすみ')
+                        
+                    else:
+                        os.system("aplay '/home/pi/Music/ohayo.wav'")
+                        killword = ('ラズ')
+                    print (command)
+                    data = '' 
+
             else:
-                data = data + str(client.recv(1024).decode('utf-8'))
+                data += str(client.recv(1024).decode('utf-8'))
                 print('NotFound')
-                
+
+
     except KeyboardInterrupt:
-        #p.kill()
+        p.kill()
+        subprocess.call(["kill " + pid], shell=True)
         client.close()
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ import socket
 import subprocess
 import xml.etree.ElementTree as ET
 import os
-host = "localhost"
+host = "192.168.11.26"
 port = 10500
 
 
@@ -17,7 +17,7 @@ voices = {
 
  # def SelectVoice(koe):
 
-;;;;
+
 def main():
     
   # julius起動スクリプトを実行
